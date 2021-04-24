@@ -49,38 +49,37 @@ function VideoUploadPage (props) {
         console.log(files)
 
         axios.post('/api/video/uploadfiles', formData, config)
-        .then(response => {
-            if(response.data.success) {
-                console.log(response.data)
+            .then(response => {
+                if(response.data.success) {
+                    console.log(response.data)
 
-                let variable = {
-                    url: response.data.url,
-                    fileName: response.data.fileName
-                }
-
-                setFilePath(response.data.url)
-
-                axios.post('/api/video/thumbnail', variable)
-                .then(response => {
-                    if(response.data.success) {
-                        console.log(response.data)
-                        setDuration(response.data.fileDuration)
-                        setThumbnailPath(response.data.url)
-                    } else {
-                        alert('썸네일 생성에 실패했습니다.')
+                    let variable = {
+                        url: response.data.url,
+                        fileName: response.data.fileName
                     }
-                })
 
+                    setFilePath(response.data.url)
 
+                    axios.post('/api/video/thumbnail', variable)
+                    .then(response => {
+                        if(response.data.success) {
+                            console.log(response.data)
+                            setDuration(response.data.fileDuration)
+                            setThumbnailPath(response.data.url)
+                        } else {
+                            alert('썸네일 생성에 실패했습니다.')
+                        }
+                    })
 
-            } else{
-                alert('비디오 업로드를 실패했습니다.')
-            }
+                } else{
+                    alert('비디오 업로드를 실패했습니다.')
+                }
         })
     }
 
     const onSubmit = (e) => {
         e.preventDefault();
+
         const variables = {
             writer: user.userData._id,
             title: VideoTitle,
@@ -94,6 +93,7 @@ function VideoUploadPage (props) {
         axios.post('api/video/uploadVideo', variables)
             .then(response => {
                 if(response.data.success) {
+                    console.log(response.data);
                     message.success('성공적으로 업로드를 했습니다.')
                     setTimeout(() => {
                         props.history.push('/')
