@@ -39,17 +39,15 @@ router.post('/uploadfiles', (req, res) => {
 
 })
 
-
 router.post('/thumbnail', (req, res) => {
   // 썸네일 생성 후 비디오 러닝타임도 가져오기
-
   let filePath = "";
   let fileDuration = "";
-
   // 비디오 정보 가져오기
-  ffmpeg.ffprobe(req.body.url, function (err, metadata) {
+  ffmpeg.ffprobe(req.body.url, function(err, metadata) {
+    console.log(req.body.url);
     console.dir(metadata) // all metadata
-    console.log(metadata)
+    console.log(metadata.format.duration)
     fileDuration = metadata.format.duration
   });
 
