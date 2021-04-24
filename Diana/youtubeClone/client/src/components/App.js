@@ -22,7 +22,7 @@ function App() {
           <Route exact path="/" component={Auth(LandingPage, null)} />
           <Route exact path="/login" component={Auth(LoginPage, false)} />  
           <Route exact path="/register" component={Auth(RegisterPage, false)} />
-          <Route exact path="/video/upload" component={Auth(VideoUploadPage, true)} />
+          <Route exact path="/upload" component={Auth(VideoUploadPage, true)} />
           {/* false를 하면 로그인한 사람은 못 들어감, true는 로그인 한 사람만 들어갈 수 있음 */}
         </Switch>
       </div>
