@@ -3,7 +3,7 @@ const router = express.Router();
 // const { Video } = require("../models/Video");
 const { auth } = require("../middleware/auth");
 const multer = require("multer");
-const ffmpeg = require("fluent-ffmpeg");
+let ffmpeg = require("fluent-ffmpeg");
 
 //=================================
 //             video
@@ -42,38 +42,38 @@ router.post('/uploadfiles', (req, res) => {
 router.post('/thumbnail', (req, res) => {
   // 썸네일 생성 후 비디오 러닝타임도 가져오기
   let filePath = "";
-  let fileDuration = "";
+  let fileDuration = ""; 
+
   // 비디오 정보 가져오기
-  ffmpeg.ffprobe(req.body.url, function(err, metadata) {
+  ffmpeg.ffprobe(req.body.url, function (err, metadata) {
     console.log(req.body.url);
     console.dir(metadata) // all metadata
-    console.log(metadata.format.duration)
-    fileDuration = metadata.format.duration
+    console.log(metadata.format.duration);
+    fileDuration = metadata.format.duration;
   });
 
   // 썸네일 생성
   ffmpeg(req.body.url)
-  .on('filenames', function(filenames) {
-    console.log('will generate ' + filenames.join(', '));
-    console.log(filenames);
+    .on('filenames', function (filenames) {
+      console.log('will generate ' + filenames.join(', '));
+      console.log(filenames);
 
-    filePath = "uploads/thumbnails/" + filenames[0];
-  })
-  .on('end', function() {
-    console.log('screenshots taken');
-    return res.json({ success: true, url: filePath, fileDuration: fileDuration })
-  })
-  .on('error', function(err) {
-    console.error(err);
-    return res.json({ success: false, err});
-  })
-  .screenshots({
-    count: 3,
-    folder: 'uploads/thumbnails',
-    size: '320x240',
-    filename: 'thumbnail-%b.png'
-  })
+      filePath = "uploads/thumbnails/" + filenames[0];
+    })
+    .on('end', function () {
+      console.log('screenshots taken');
+      return res.json({ success: true, url: filePath, fileDuration: fileDuration })
+    })
+    .on('error', function (err) {
+      console.error(err);
+      return res.json({ success: false, err });
+    })
+    .screenshots({
+      count: 1,
+      folder: 'uploads/thumbnails',
+      size: '320x240',
+      filename: 'thumbnail-%b.png'
+    })
 })
 
-
-module.exports = router; 
+module.exports = router;
