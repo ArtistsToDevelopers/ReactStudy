@@ -40,20 +40,20 @@ router.post('/uploadfiles', (req, res) => {
 
 router.post('/uploadVideo', (req, res) => {
   // 비디오 정보들을 mongoDB에 저장한다.
-    const video = new Video(req.body); // client에서 보낸 모든 variables가 req.body에 담김
+  const video = new Video(req.body); // client에서 보낸 모든 variables가 req.body에 담김
 
-    video.save((err, doc) => {
-      if (err) {
-        return res.json({ success:  false, err })
-      }
-      res.status(200).json({ success: true });
-    });
+  video.save((err, doc) => {
+    if (err) {
+      return res.json({ success: false, err })
+    }
+    res.status(200).json({ success: true });
+  });
 })
 
 router.post('/thumbnail', (req, res) => {
   // 썸네일 생성 후 비디오 러닝타임도 가져오기
   let filePath = "";
-  let fileDuration = ""; 
+  let fileDuration = "";
 
   // 비디오 정보 가져오기
   ffmpeg.ffprobe(req.body.url, function (err, metadata) {
@@ -85,6 +85,25 @@ router.post('/thumbnail', (req, res) => {
       size: '320x240',
       filename: 'thumbnail-%b.png'
     })
+})
+
+router.get('/getVideos', (req, res) => {
+  // 비디오를 DB에서 가져와서 클라이언트에 보낸다.
+  Video.find()
+    .populate('writer')
+    .exec((err, videos) => {
+      if (err) return res.status(400).send(err);
+      res.status(200).json({ success: true, videos });
+    });
+})
+
+router.post("/getVideoDetail", (req, res) => {
+  Video.findOne({ "_id": req.body.videoId })
+    .populate("writer")
+    .exec((err, videoDetail) => {
+      if (err) return res.status(400).send(err)
+      return res.status(200).json({ success: true, videoDetail });
+    }) // 유저의 모든 정보를 가져옴
 })
 
 module.exports = router;
