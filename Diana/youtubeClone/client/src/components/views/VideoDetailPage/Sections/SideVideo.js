@@ -1,23 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const [SideVideos, setSideVideos] = useState([]);
-// 여기에 에러가 있다고 하는데 대체 무엇이 문제인지 모르겠음
+function SideVideo() {
+    const [sideVideos, setsideVideos] = useState([]);
 
+    useEffect(() => {
+        axios.get('/api/video/getVideos')
+            .then(response => {
+                if(response.data.success) {
+                    console.log(response.data.videos);
+                    setsideVideos(response.data.videos);
+                } else {
+                    alert('비디오 가져오기를 실패했습니다.');
+                }
+            })
+    }, [])
 
-useEffect(() => {
-    axios.get('/api/video/getVideos')
-    .then(response => {
-        if(response.data.success) {
-            console.log(response.data);
-            setSideVideos(response.data.videos);
-        } else {
-            alert('비디오 가져오기를 실패했습니다.')
-        }
-    })
-}, [])
-
-const renderSideVideo = SideVideos.map((video, index) => {
+const renderSideVideo = sideVideos.map((video, index) => {
     var minutes = Math.floor(video.duration / 60);
     var seconds = Math.floor((video.duration - minutes * 60));  
 
@@ -40,7 +39,7 @@ const renderSideVideo = SideVideos.map((video, index) => {
     )
 });
 
-function SideVideo() {
+
     return (
             <React.Fragment>
                 {renderSideVideo}
