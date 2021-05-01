@@ -31,13 +31,13 @@ const upload = multer({ storage: storage }).single("file");
 //             Video
 //=================================
 
-router.post('/uploadfiles', (req, res) => {
-    // 비디오를 서버에 저장한다.
-    upload(req, res, err => {
-        if(err) {
-            return res.json({ success: false, err })
-        }
-        return res.json({ success: true, url: res.req.file.path, fileName: res.req.file.filename })
+router.post('/uploadVideo', (req, res) => {
+    // 비디오 정보들을 저장한다
+    const video = new Video(req.body)
+
+    video.save((err, doc) => {
+        if(err) return res.json({ success: false, err })
+        res.status(200).json({ success: true })
     })
 })
 

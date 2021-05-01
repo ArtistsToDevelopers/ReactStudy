@@ -90,7 +90,7 @@ function VideoUploadPage (props) {
             duration: Duration,
             thumbnail: ThumbnailPath
         }
-        axios.post('api/video/uploadVideo', variables)
+        axios.post('/api/video/uploadVideo', variables)
             .then(response => {
                 if(response.data.success) {
                     console.log(response.data);
