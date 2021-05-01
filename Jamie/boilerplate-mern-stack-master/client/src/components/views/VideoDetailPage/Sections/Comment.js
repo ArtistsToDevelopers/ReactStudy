@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import SingleComment from './SingleComment'
+import ReplyComment from './ReplyComment'
 
 function Comment({ refreshFunction, commentsList, postId }) {
   const videoId = postId; // App.js에서 url에 담겨져있기 때문에 가져올 수 있음
@@ -43,12 +44,13 @@ function Comment({ refreshFunction, commentsList, postId }) {
       {/* Comment Lists */}
       {commentsList && commentsList.map((comment, index) => (
         (!comment.responseTo &&
-          <SingleComment key={index} refreshFunction={refreshFunction} comment={comment} postId={videoId} />
+          <Fragment>
+            <SingleComment key={index} refreshFunction={refreshFunction} comment={comment} postId={videoId} />
+            <ReplyComment refreshFunction={refreshFunction} commentsList={commentsList} parentCommentId={comment._id} postId={videoId} />
+          </Fragment>
         )
 
       ))}
-
-
 
       {/* Root Comment Form */}
       <form style={{ display: 'flex' }} onSubmit={onSubmit}>
