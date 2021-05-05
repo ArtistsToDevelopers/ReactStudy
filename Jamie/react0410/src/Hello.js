@@ -1,17 +1,14 @@
-// 리액트 컴포넌트 만들기
+import React, { Component } from 'react'
 
-// 리액트 불러오기
-import React from 'react';
+class Hello extends Component {
+  render() {
+    const { color, name, isSpecial } = this.props;
 
-function Hello({color, name, isSpecial}) {
-    return <div style={{color}}>
+    return (
+      <div style={{ color }}>
         { isSpecial && <b>*</b> }
-        Hello {name}!</div>
+        안녕하세요 { name }
+      </div>
+    )
+  }
 }
-
-Hello.defaultProps = {
-    name: '이름없음'
-}
-
-// Hello라는 컴포넌트를 내보낼거야
-export default Hello;
