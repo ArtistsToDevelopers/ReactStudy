@@ -12,7 +12,7 @@ const PostListContainer = () => {
     dispatch(getPosts())
   }, [dispatch])
 
-  if (loading) return <div>loading...</div>
+  if (loading && !data) return <div>loading...</div>
   if (error) return <div>error occured!</div>
   if (!data) return null
 
