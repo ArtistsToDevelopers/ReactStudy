@@ -9,12 +9,16 @@ import rootReducer, { rootSaga } from './modules'
 import logger from 'redux-logger'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import ReduxThunk from 'redux-thunk'
-import { BrowserRouter, Router } from 'react-router-dom'
+import { Router } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
 import createSagaMiddleware from 'redux-saga'
 
 const customHistory = createBrowserHistory()
-const sagaMiddleware = createSagaMiddleware(); // saga middleware 생성
+const sagaMiddleware = createSagaMiddleware({
+  context: {
+    history: customHistory
+  }
+}); // saga middleware 생성
 
 const store = createStore(
   rootReducer,
@@ -22,10 +26,10 @@ const store = createStore(
   composeWithDevTools(
     applyMiddleware(
       ReduxThunk.withExtraArgument({ history: customHistory }),
-      sagaMiddleware,
+      sagaMiddleware, // saga middleware 적용
       logger))
 )
-// 스토어 생성 후
+// 주의: 스토어 생성 후 아래 코드 실행
 sagaMiddleware.run(rootSaga) // root saga 실행
 
 

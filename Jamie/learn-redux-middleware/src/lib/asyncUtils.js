@@ -1,3 +1,5 @@
+import { call, put } from 'redux-saga/effects'
+
 // promise에 기반한 thunk 생성
 export const createPromiseThunk = (type, promiseCreator) => {
   const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`]
@@ -14,6 +16,36 @@ export const createPromiseThunk = (type, promiseCreator) => {
       dispatch({ type: SUCCESS, payload })
     } catch (e) {
       dispatch({ type: ERROR, payload: e, error: true })
+    }
+  }
+}
+
+/* PromiseSaga */
+// 프로미스를 기다렷다가 결과를 디스패치하는 사가
+export const createPromiseSaga = (type, promiseCreator) => {
+  const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`]
+  return function* saga(action) {
+    try {
+      // 재사용성을 위해 promiseCreator의 파라미터에는 action.payload의 값을 넣도록 설정
+      const payload = yield call(promiseCreator, action.payload)
+      yield put({ type: SUCCESS, payload })
+    } catch (e) {
+      yield put({ type: ERROR, error: true, payload: e })
+    }
+  }
+}
+
+// 특정 id의 데이터를 조회하는 용도로 사용하는 사가
+// API를 호출할 때 파라미터는 action.payload를 넣고, id 값을 action.meta로 설정
+export const createPromiseSagaById = (type, promiseCreator) => {
+  const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`]
+  return function* saga(action) {
+    const id = action.meta
+    try {
+      const payload = yield call(promiseCreator, action.payload)
+      yield put({ type: SUCCESS, payload, meta: id })
+    } catch (e) {
+      yield put({ type: ERROR, error: e, meta: id })
     }
   }
 }
