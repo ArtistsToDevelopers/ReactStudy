@@ -21,7 +21,7 @@ export const createPromiseThunk = (type, promiseCreator) => {
 }
 
 /* PromiseSaga */
-// 프로미스를 기다렷다가 결과를 디스패치하는 사가
+// 프로미스를 기다렸다가 결과를 디스패치하는 사가
 export const createPromiseSaga = (type, promiseCreator) => {
   const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`]
   return function* saga(action) {
